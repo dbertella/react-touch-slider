@@ -20,7 +20,7 @@ module.exports = {
   devtool: false,
   entry: [
     './node_modules/underscore/underscore-min.js',
-    './src/scripts/components/TestApp.js'],
+    './src/scripts/components/touch-slider.js'],
 
   stats: {
     colors: true,

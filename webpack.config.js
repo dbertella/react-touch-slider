@@ -21,7 +21,7 @@ module.exports = {
       'webpack/hot/only-dev-server',
       './node_modules/underscore/underscore-min.js',
       './src/scripts/slides.js',
-      './src/scripts/components/TestApp.js'
+      './src/scripts/components/touch-slider.js'
   ],
 
   stats: {
