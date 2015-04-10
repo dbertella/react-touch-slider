@@ -69,7 +69,7 @@ var data = [
 			"url" : "http://placehold.it/1024x768",
 			"order" : 9,
 			"media" : null		
-		}/*,
+		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 10,
@@ -89,7 +89,7 @@ var data = [
 			"url" : "http://placehold.it/1024x768",
 			"order" : 13,
 			"media" : null		
-		}*/
+		}
 ];
 
 var Slide = React.createClass({
@@ -119,7 +119,7 @@ var activeSlides = function (slideId) {
 
 	slideToShow.push(_.find(data, { "order": slideId }));
 	
-	if (slideId < data.length -1 ) {
+	if (slideId < data.length ) {
 		slideToShow.push(_.find(data, { "order": slideId + 1 }));
 	}
 	
@@ -149,70 +149,96 @@ var Slide = React.createClass({
 var coord = {};
 
 var SlideList = React.createClass({
+
 	initialCoord: function (e) {
+		 // * get initial x-coordinate on touchstart 
 		coord.startX = e.changedTouches[0].pageX; 
 	},
 	onMove: function (e) {
+		 // * get x-coordinate on touchmove 
 		coord.endX = e.changedTouches[0].pageX; 
 		coord.delta = coord.endX - coord.startX;
 		this.setState({
-				//count: this.state.count + 1,
 				translate: coord.delta + "px",
 				transition: 0
 			});
 	},
 	incrementCount: function (e) {
+		// *** get x-coordinate on touchend
 		coord.endX = e.changedTouches[0].pageX;
-		
-            var direction;
-            if (coord.endX > coord.startX) {
-                direction = 'right';
-            } else {
-                direction = 'left';
-            }
+		var self = this,
+        	direction,
+			translateLeft = coord.endX - coord.startX;
 
-            var translateLeft = coord.endX - coord.startX;
-            if (Math.abs(translateLeft) < 150) {
-                translateLeft = 0;
-                
+		// * get the direction X coordinate on touchend minus X coordinate on touchstart
+        if (coord.endX > coord.startX) {
+            direction = 'right';
+        } else {
+            direction = 'left';
+        }
+
+        // * if endX - startX is less then 150px I reset the slide to 0
+        if (Math.abs(translateLeft) < 150) {
+            translateLeft = 0;
+            
+        } else {
+            if (direction === 'left') {
+            	// * Last slide shouldn't go right            
+            	if (self.state.count === data.length) {
+            		translateLeft = 0;
+            	} else {
+            		translateLeft = '-1024px';
+            	}
             } else {
-                if (direction === 'left') {                  
-                    translateLeft = '-1024px';
-                } else {                    
-                    translateLeft = '1024px';
-                }
-            }   
-		var self = this;
-		if (self.state.count < data.length - 1) {
-			self.setState({
-				//count: this.state.count + 1,
-				translate: translateLeft,
-				transition: 0.3
-			});
-			if (translateLeft){
-				setTimeout(function () {
-					if (direction === 'left') {                  
-					    self.setState({
-    						count: self.state.count + 1,
-    						translate: 0,
-    						transition: 0
-    					});
-					} else {                    
-					    self.setState({
-    						count: self.state.count -1,
-    						translate: 0,
-    						transition: 0
-    					});
-					}
-				}, 300); 
-			} else {
-				setTimeout(function () {
-					self.setState({
+            	// * First slide shouldn't go left 
+            	if (self.state.count === 1) {
+            		translateLeft = 0;
+            	} else {
+            		translateLeft = '1024px';
+            	}
+            }
+        } 
+
+		self.setState({
+			translate: translateLeft,
+			transition: 0.3
+		});
+		if (translateLeft){
+			setTimeout(function () {
+				if (direction === 'left') {                  
+				    self.setState({
+						count: self.state.count + 1,
+						translate: 0,
 						transition: 0
 					});
-				}, 300); 
-			}
+				} else {                    
+				    self.setState({
+						count: self.state.count -1,
+						translate: 0,
+						transition: 0
+					});
+				}
+			}, 300); 
+		} else {
+			setTimeout(function () {
+				self.setState({
+					transition: 0
+				});
+			}, 300); 
 		}
+		// if (self.state.count <= data.length) {
+		// 	self.setState({
+		// 		translate: translateLeft,
+		// 		transition: 0.3
+		// 	});
+			
+		// } else {
+		// 	self.setState({
+		// 		translate: translateLeft,
+		// 		transition: 0.3
+		// 	});
+		// }
+
 	},
 	getInitialState: function () {
 		return {
@@ -230,7 +256,6 @@ var SlideList = React.createClass({
 		} else {
 			transform = "-1024px";
 		}
-
 		var slidesToShow = activeSlides(this.state.count);
 		var slideWrapperWidth = slidesToShow.length;
 		var style = {
