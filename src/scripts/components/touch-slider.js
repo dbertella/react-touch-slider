@@ -64,12 +64,12 @@ var data = [
 			"url" : "http://placehold.it/1024x768",
 			"order" : 8,
 			"media" : null		
-		}/*,
+		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 9,
 			"media" : null		
-		},
+		}/*,
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 10,
