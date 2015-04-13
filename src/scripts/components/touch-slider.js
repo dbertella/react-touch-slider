@@ -27,80 +27,84 @@ var data = [
 	{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 1,
-			"media" : null
+			"color" : "color-2"
 			
 		}, 
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 2,
-			"media" : null		
+			"color" : "color-1"		
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 3,
-			"media" : null		
+			"color" : "color-2"		
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 4,
-			"media" : null		
+			"color" : "color-1"		
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 5,
-			"media" : null		
+			"color" : "color-2"		
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 6,
-			"media" : null		
+			"color" : "color-1"		
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 7,
-			"media" : null		
+			"color" : "color-2"		
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 8,
-			"media" : null		
+			"color" : "color-1"		
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 9,
-			"media" : null		
+			"color" : "color-2"		
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 10,
-			"media" : null
+			"color" : "color-1"
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 11,
-			"media" : null		
+			"color" : "color-2"		
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 12,
-			"media" : null		
+			"color" : "color-1"			
 		},
 		{
 			"url" : "http://placehold.it/1024x768",
 			"order" : 13,
-			"media" : null		
+			"color" : "color-2"	
 		}
 ];
+
+var windowWidth = window.innerWidth;
+var windowHeight = window.innerHeight;
 
 var Slide = React.createClass({
 	render: function () {
 		var style= {
+			width: windowWidth,
 			webkitTransform: "translateX(" + this.props.translate + ")",
 			transition: "-webkit-transform " + this.props.transition + " ease-in-out"
 		};
 		var cx = React.addons.classSet;
 		//var classString = this.props.order ;
-		 var classes = cx('single-slide', 'slide-' + this.props.order);
+		 var classes = cx('single-slide', 'slide-' + this.props.order, this.props.color);
 		return (
 			<div style={style} className={classes}>
 				<span>{this.props.order}</span>
@@ -126,25 +130,23 @@ var activeSlides = function (slideId) {
 	return slideToShow;
 };
 
-var Slide = React.createClass({
-	render: function () {
-		var style= {
-			webkitTransform: "translateX(" + this.props.translate + ")",
-			transition: "-webkit-transform " + this.props.transition + " ease-in-out"
-		};
-		var cx = React.addons.classSet;
-		//var classString = this.props.order ;
-		 var classes = cx('single-slide', 'slide-' + this.props.order);
-		return (
-			<div style={style} className={classes}>
-				<span>{this.props.order}</span>
-				<img src={this.props.imgBg} />
-			</div>
-		);
-	}
-});
-
-
+// var Slide = React.createClass({
+// 	render: function () {
+// 		var style= {
+// 			webkitTransform: "translateX(" + this.props.translate + ")",
+// 			transition: "-webkit-transform " + this.props.transition + " ease-in-out"
+// 		};
+// 		var cx = React.addons.classSet;
+// 		//var classString = this.props.order ;
+// 		 var classes = cx('single-slide', 'slide-' + this.props.order);
+// 		return (
+// 			<div style={style} className={classes}>
+// 				<span>{this.props.order}</span>
+// 				<img src={this.props.imgBg} />
+// 			</div>
+// 		);
+// 	}
+// });
 
 var coord = {};
 
@@ -162,7 +164,7 @@ var SlideList = React.createClass({
 				translate: coord.delta + "px",
 				transition: 0
 			});
-		console.log(coord.delta);
+		// console.log(coord.delta);
 	},
 	onTouchEnd: function (e) {
 		// *** get x-coordinate on touchend
@@ -189,14 +191,14 @@ var SlideList = React.createClass({
             	if (self.state.count === data.length) {
             		translateLeft = 0;
             	} else {
-            		translateLeft = '-1024px';
+            		translateLeft = '-' + windowWidth + 'px';
             	}
             } else {
             	// * First slide shouldn't go left 
             	if (self.state.count === 1) {
             		translateLeft = 0;
             	} else {
-            		translateLeft = '1024px';
+            		translateLeft = windowWidth + 'px';
             	}
             }
         } 
@@ -243,12 +245,12 @@ var SlideList = React.createClass({
 		if (this.state.count === 1) {
 			transform = 0;
 		} else {
-			transform = "-1024px";
+			transform = "-" + windowWidth + "px";
 		}
 		var slidesToShow = activeSlides(this.state.count);
 		var slideWrapperWidth = slidesToShow.length;
 		var style = {
-			width: 1024 * slideWrapperWidth + "px",
+			width: windowWidth * slideWrapperWidth + "px",
 			height: "768px",
 			webkitTransform: "translateX(" + transform + ")"
 		};
@@ -256,7 +258,7 @@ var SlideList = React.createClass({
 		return (
 			<div id="slide-wrapper" style={style} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>{ slidesToShow.map(function (s) {
 
-				return <Slide imgBg={s.url} order={s.order} translate={this.state.translate} transition={this.state.transition + "s"} />;
+				return <Slide imgBg={s.url} order={s.order} color={s.color} translate={this.state.translate} transition={this.state.transition + "s"} />;
 			}, this)}</div>
 		);
 	}

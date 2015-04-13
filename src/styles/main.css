@@ -2,13 +2,25 @@
 
 html, body {
   background: #222222;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .single-slide {
   position: relative;
   float: left;
-  width: 1024px;
+  max-width: 100%;
+}
+.single-slide:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+.color-2:before {
+  background: rgba(0, 0, 0, 0);
 }
 span {
   position: absolute;
@@ -16,4 +28,9 @@ span {
   right: 20px;
   font-size: 50px;
   color: #333;
+}
+img {
+  display: block;
+  border: 0;
+  width: 100%;
 }
