@@ -150,11 +150,11 @@ var coord = {};
 
 var SlideList = React.createClass({
 
-	initialCoord: function (e) {
+	onTouchStart: function (e) {
 		 // * get initial x-coordinate on touchstart 
 		coord.startX = e.changedTouches[0].pageX; 
 	},
-	onMove: function (e) {
+	onTouchMove: function (e) {
 		 // * get x-coordinate on touchmove 
 		coord.endX = e.changedTouches[0].pageX; 
 		coord.delta = coord.endX - coord.startX;
@@ -162,8 +162,9 @@ var SlideList = React.createClass({
 				translate: coord.delta + "px",
 				transition: 0
 			});
+		console.log(coord.delta);
 	},
-	incrementCount: function (e) {
+	onTouchEnd: function (e) {
 		// *** get x-coordinate on touchend
 		coord.endX = e.changedTouches[0].pageX;
 		var self = this,
@@ -178,9 +179,10 @@ var SlideList = React.createClass({
         }
 
         // * if endX - startX is less then 150px I reset the slide to 0
-        if (Math.abs(translateLeft) < 150) {
+        if (Math.abs(translateLeft) < 5) {
+        		alert(Math.abs(translateLeft));
+        } else if (Math.abs(translateLeft) < 150) {
             translateLeft = 0;
-            
         } else {
             if (direction === 'left') {
             	// * Last slide shouldn't go right            
@@ -226,19 +228,6 @@ var SlideList = React.createClass({
 				});
 			}, 300); 
 		}
-		// if (self.state.count <= data.length) {
-		// 	self.setState({
-		// 		translate: translateLeft,
-		// 		transition: 0.3
-		// 	});
-			
-		// } else {
-		// 	self.setState({
-		// 		translate: translateLeft,
-		// 		transition: 0.3
-		// 	});
-		// }
-
 	},
 	getInitialState: function () {
 		return {
@@ -265,7 +254,7 @@ var SlideList = React.createClass({
 		};
 
 		return (
-			<div id="slide-wrapper" style={style} onTouchStart={this.initialCoord} onTouchMove={this.onMove} onTouchEnd={this.incrementCount}>{ slidesToShow.map(function (s) {
+			<div id="slide-wrapper" style={style} onTouchStart={this.onTouchStart} onTouchMove={this.onTouchMove} onTouchEnd={this.onTouchEnd}>{ slidesToShow.map(function (s) {
 
 				return <Slide imgBg={s.url} order={s.order} translate={this.state.translate} transition={this.state.transition + "s"} />;
 			}, this)}</div>
