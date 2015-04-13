@@ -149,21 +149,30 @@ var activeSlides = function (slideId) {
 // });
 
 var coord = {};
-
+coord.timer = false;
 var SlideList = React.createClass({
 
 	onTouchStart: function (e) {
 		 // * get initial x-coordinate on touchstart 
-		coord.startX = e.changedTouches[0].pageX; 
+		if (!coord.timer) {
+			coord.startX = e.changedTouches[0].pageX;
+			// * prevent user to do multiple touch too quickly
+			coord.timer = true;
+			console.log("touchstart", coord.timer);
+		}
+		
 	},
 	onTouchMove: function (e) {
-		 // * get x-coordinate on touchmove 
-		coord.endX = e.changedTouches[0].pageX; 
-		coord.delta = coord.endX - coord.startX;
-		this.setState({
-				translate: coord.delta + "px",
-				transition: 0
-			});
+		// * get x-coordinate on touchmove 
+		if (coord.timer) {
+			coord.endX = e.changedTouches[0].pageX; 
+			coord.delta = coord.endX - coord.startX;
+			this.setState({
+					translate: coord.delta + "px",
+					transition: 0
+				});
+			console.log("touchmove", coord.timer);
+		}
 		// console.log(coord.delta);
 	},
 	onTouchEnd: function (e) {
@@ -172,17 +181,25 @@ var SlideList = React.createClass({
 		var self = this,
         	direction,
 			translateLeft = coord.endX - coord.startX;
-
+		// * prevent user to do multiple touch too quickly
+		if (!coord.timer) {
+			translateLeft = 0;
+		}
+		setTimeout(function () {
+			coord.timer = false;
+			console.log("touchend after", coord.timer);
+		}, 1000);
+		console.log("touchend before", coord.timer, translateLeft);
 		// * get the direction X coordinate on touchend minus X coordinate on touchstart
         if (coord.endX > coord.startX) {
             direction = 'right';
         } else {
             direction = 'left';
         }
-
+        
         // * if endX - startX is less then 150px I reset the slide to 0
         if (Math.abs(translateLeft) < 5) {
-        		alert(Math.abs(translateLeft));
+        		console.log(Math.abs(translateLeft));
         } else if (Math.abs(translateLeft) < 150) {
             translateLeft = 0;
         } else {
